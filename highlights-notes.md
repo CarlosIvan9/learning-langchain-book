@@ -92,3 +92,42 @@ The cool thing about assembling objects, is that you can still use .invoke, .bat
 
 ### Extra
 * There is a **with_retry** option in the models that could be worth exploring. The book does not cover retries. There are also functionalities for fallbacks.
+
+
+
+# Chapter 2
+
+All this chapter is about the first part of RAG systems: indexing documents.
+
+* A generative LLMs context window includes both input (the full prompt) and output. Be careful when the context is too long wrt the context window, because then the output of the model will be truncated. There is no straight way to map this to text splitters since context window is wrt tokens and splitters wrt characters, but a good approx is to assume that a token is between 3 and 4 letters long
+
+### About data loaders
+* There are different types of them, depending how the input is stored (.txt, .pdf, html...). There is even one that loads html text from a website!
+* PyMuPDFLoader is better than PyPDFLoader. It is faster, and can extract more complex info from files such as coordinates, images, metadata
+
+### About text splitters
+* RecursiveCharacterTextSplitter splits first by paragraph, then by line, then by words. They do this on a hierarchichal way to guarantee all chunks are as big as possible, but semantically coherent.
+* Splitters can be activated with these methods
+  * split_documents : when inputs are documents objects
+  * create_documents: when inputs are strings. This also allows passing data that you want to keep as metadata for each chunk.
+
+### About embedding documents and vector stores
+* Embed in a batch is more efficient for encoders (due to gpus probably i guess)
+* Process to create vector stores from docker containers is explained well in the book
+* More info on how to set up a vector store in qdrant, as well as how to manage it, is in the boardgames-assistant repo
+* According to chatgpt, qdrant is the best open source vector store until now
+
+
+### Strategies to improve search performance (Indexing optimization):
+* MultiVectorRetriever: generate a summary of each chunk, and embed that summary. Perform similarity search using the embeddings of the summaries, but provide as context the full chunks instead of the summaries.
+* RAPTOR: amazing solution to provide the RAG system with also highlevel understanding instead of low level (by that i mean knowledge accross chunks). 
+  * Create summaries of each chunk. Embed those summaries and add them to the vector store
+  * Cluster summary embeddings. For each cluster, create a summary of the summaries. Embed that summary, and add it to the vector store
+  * Generate a summary of all the cluster summaries. Embed that summary, and add it to the vector store.
+
+
+### Tacking document changes
+Langchain comes with functionalities that make your system robust against changes in documents.
+This is done with the RecordManager class. Basically it registers all chunks with their metadata. You define the metadata to use as key. Every time you sync the record manager, it will drop the previous chunks and embeddings related to the documents that were updated, and it will create new chunks and embeddings for these. More information and code under this section.
+
+

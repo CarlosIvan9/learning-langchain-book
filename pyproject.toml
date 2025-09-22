@@ -24,7 +24,10 @@ dependencies = [
     "langgraph-cli>=0.1.73",
     "langchain-cohere (==0.4.4)",
     "langchain-text-splitters (>=0.3.11,<0.4.0)",
-    "cohere (==5.15.0)"
+    "cohere (==5.15.0)",
+    "pymupdf (>=1.26.4,<2.0.0)",
+    "langchain-qdrant (==0.2.0)",
+    "qdrant-client (==1.15.1)"
 ]
 
 [tool.poetry]
