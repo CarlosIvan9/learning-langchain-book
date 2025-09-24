@@ -126,8 +126,46 @@ All this chapter is about the first part of RAG systems: indexing documents.
   * Generate a summary of all the cluster summaries. Embed that summary, and add it to the vector store.
 
 
-### Tacking document changes
+### Tracking document changes
 Langchain comes with functionalities that make your system robust against changes in documents.
 This is done with the RecordManager class. Basically it registers all chunks with their metadata. You define the metadata to use as key. Every time you sync the record manager, it will drop the previous chunks and embeddings related to the documents that were updated, and it will create new chunks and embeddings for these. More information and code under this section.
+
+
+# Chapter 3
+This chapter covers tools to make the retrieval of documents more accurate, consistent and robust. This is done with strategies like query transformation, query routing, smart filtering and query construction.
+
+We also are shown that we can wrap the vector store as a retriever using ".as_retriever()" and then performing ".get_relevant_documents()", as a better alternative to ".similarity_search()" for production ready RAGs. I think that filters are easier to define there too (not sure though). Also, retriever wraps everything, even the decoder. Its the whole rag. However, I think that langgraph is a better approach, cleaner and with more visibility.
+
+Fun fact: retrieving more documents (higher k) makes the RAG slower.
+
+### Query transformation
+Aims to solve the issue of users writing poor quality prompts. Two solutions are of interest:
+
+* Rewrite-Retrieve-Read: Add an extra step that asks an llm to create a better prompt for the llm to answer the user. You could add to remove useless info for the llm too.
+* Multi-Query Retrieval: Add an extra step that asks an llm to generate different prompts for the llm to answer the user. You then retrieve all chunks that were the most similar to each of the prompts, remove duplicate chunks, and add this as context for the llm to answer the original question.
+
+I think approach 1 is better than 2. Approach 2 is an overkill unless the original prompt is asking for a lot of different things. All code is presented. 2 other approaches are presented but I did not see their advantage.
+
+### Query routing
+This one is very nice too. It aims to solve the issues when the document chunks are stored in multiple vector stores. 
+
+* Local Routing: Using a LangChain wrapper of pydantic, you can add an extra step that detects, based on the user prompt, the best vector store for retrieving info. Thanks to pydantic you force the llm output to have the exact name of the vector store.  Nevertheless, this tool can be useful in way more cases: it can also be used to filter to specific chunks in the same vector store, for example.
+
+In this section, we are also introduced briefly to how to add functions into a chain by wrapping them as a RunnableLambda (remember that all members of a chain need to have the methods .invoke, .batch, .stream)
+
+* Semantic Routing: you create a description of each of the options for the routing, and you embed them. Then, to decide which routing to use for a given user prompt, you embed the user prompt and calculate its similarity with the options descriptions, and choose the route with the highest similarity. If you see it this way, in local routing you are letting a decoder decide which option to take, while in semantic routing you are letting the encoder do it.
+
+I think semantic routing might yield better accuracy, but nowadays decoders are so strong that I will choose first local routing because it is easier to implement.
+
+
+### Smart filtering
+This part is called in the book "Text-to-Metadata" and it is written under the section "Query construction", but I thought it was better to make it apart. This tool is also very cool. Remember that in the boardgames assistant I created some filters that were quite hardcoded? Well, with LangChain, you can create filters based on the users input! The only requirement is that the information to be used as a filter should be part of the metadata of the chunks.
+
+Under the hood, this approach first creates 2 outputs from the user prompt: the filters to applied, and a new user prompt without that info. Then it uses the output of the filters to actually create filters on the retrieval, and returns the chunks most similar to the new user prompt. Cool, right? You can even say "What are alien movies in 1980?", assuming the chunks are about movies and there is metadata with the year of the movie.
+
+### Query construction
+This is also very cool, and in the book is referred to "Text-to-SQL". This is mainly when you want to extract information from a relational database (e.g. any sql database) without using code (so in principle, its different than a typical RAG because we dont have to chunk documents and embed them, nor perform similarity search). In just a couple of lines of code, you can chat with your sql database asking things like "How many employees are there?"
+You can then use an llm again to deliver the result of the database in text, although the code for that is not shown.
+
 
 
