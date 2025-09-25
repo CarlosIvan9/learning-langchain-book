@@ -168,4 +168,45 @@ This is also very cool, and in the book is referred to "Text-to-SQL". This is ma
 You can then use an llm again to deliver the result of the database in text, although the code for that is not shown.
 
 
+# Chapter 4
+
+This chapter, called "Using LangGraph to Add Memory to Your Chatbot", gives an introduction to LangGraph and how it can be used to improve llm systems like adding flexibility, and memory to a user both within and accross sessions. We use langgraph in all chapters starting from this one.
+
+The boardgames assistant is a good application of these concepts.
+
+
+### Introducing LangGraph
+It first covers the intuition of langgraph and shows that all nodes of a graph should input and output a state, which is a dictionary. Each node can modify the state by adding new keys or updating values of existing ones.
+
+### Creating a StateGraph
+
+Here we saw how to create a simple graph using a custom state. We also see the commands to make the graph always append new messages into their history.
+
+We are also explained the syntax to create nodes (which is very simple)
+
+When creating a graph (graph=builder.compile()), we create a graph with the familiar **invoke** and **stream** methods!
+
+### Adding Memory to StateGraph
+
+The state can be stored in a sql database! (called a checkpointer). Like that, you can always pick up your conversation when you left off!
+
+In LangGraph, what would be a different conversation for different users will be called as "threads".
+
+You can also inspect the state for a thread! Or manually update it!
+
+### Modifying Chat History
+
+We covered how to manipulate messages of a state in an efficient way.
+
+For preventing memory from overflowing the context window (which is made of both input and output of an llm), we saw how to trim messages to a specific number of tokens. We think that a better alternative would be to trim messages to a specific number of tokens, but also generate a summary of the trimmed messages and include that in the context. That you probably have to do by hand though (probably LangChain does not have this).
+
+Furthermore, you can filter to specific messages depending on their type (ai, system, human), but also on their message name, which is kind of like an optional metadata field for each message.
+
+
+
+
+
+
+
+
 
