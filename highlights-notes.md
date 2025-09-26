@@ -203,7 +203,26 @@ For preventing memory from overflowing the context window (which is made of both
 Furthermore, you can filter to specific messages depending on their type (ai, system, human), but also on their message name, which is kind of like an optional metadata field for each message.
 
 
+# Chapter 5
 
+This chapter, called "Cognitive Architectures with LangGraph", goes through different levels of LLMs automation, providing examples of each of them.
+There is always a balance that needs to be taken into account in LLM applications. The more autonomous an LLM application is, the more it can do- but the more prone is to make mistakes. This is also called balance between agency and reliability.
+
+In this chapter we saw from the simplest level, which is just a single LLM call, to a level which uses conditional edges, and an LLM output decides to which edge to go now. Agents will be for next chapter.
+
+It would be super exciting to work on the example mentioned in the first page. Might be a good side project.
+
+* We saw that a good practice for LLM apps with multiple nodes that call an LLM is to exclude the system message from the messages history. The reasoning of this is that while the messages history is used by all nodes, the system message depends on the node. 
+
+* We saw that you can mask parts of the state so that only particular keys are output to the user. You can also define a different state key to store the user query. These masks are also defined as dictionaries, with a subset of the keys of the state.
+
+* It is very useful to look the scripts of architecture #2 and #3. In #3 we make use of conditional edges.
+
+* Using the function "as retriever" really reduces the code a lot when using RAG (until vector similarity, then you have to manually summarize the most similar documents.)
+
+* We saw that the code to create conditional edges is super easy, even easier than the one I implemented in the boardgames assistant.
+
+* We saw how adding different keys into the State dictionary can lead to more flexibility in your app. For example, adding a key for the RAG documents extracted to also output that info (or for monitoring performance), saving the user query in a different key to be used in different nodes, and auxiliar keys that help define the routing when using conditional edges.
 
 
 
