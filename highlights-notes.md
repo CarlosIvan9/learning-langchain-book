@@ -226,6 +226,46 @@ It would be super exciting to work on the example mentioned in the first page. M
 
 
 
+# Chapter 7
+
+In this chapter, called **Agents 2**, we saw more complex additions to the agents we saw in the previous chapter.
+
+### Reflection
+
+This section is very cool because it shows you how to make use of agents to retrieve more polished answers. This is done by creating 2 tools, one that will generate the output for the user, and one that will evaluate such output and provide recommendations on how to improve it.
+
+The implementation is tricky so its a good idea to look at the code and my notes:
+* For the generator, you have to make the generator think that the recommendations were done by a human.
+  * This is solved by outputing the evaluator reccomendations as HumanMessage
+* For the evaluator, you have to make the evaluator think that the generated text was done by a human
+  * This is solved by temporarily inverting the messages types from Human to AI and vice versa. 
+* The previous points are needed because some chat models dont accept 2 messages in a row from the same type, or they will accept it but it will yield poor performance.
+
+This approach is highly recommended by the authors.
+
+In this approach, it is again better to not append the system messages to the chain of messages, given that different system messages exist.
+
+The approach is very cool, it kind of mimicks a student-teacher relationship between evaluator and generator.
+
+Reflection is technically reffered to be a prompting technique.
+
+
+### Subgraphs in LangGraph
+
+This section shows you that you can use graphs as nodes in a bigger graph. This is the base of multi-agent system architectures. You literally just have to declare a graph as a node.
+
+For this to work, all subgraphs need to have the same keys as the parent state. If there are keys that are not present in the parent state, they will be ignored. In case the keys of your subgraph are different, you can make a function that calls the graph with renamed keys, and use that as a node instead of the graph itself.
+
+
+### Multi-Agent Architectures
+
+Multi agent architectures are graphs where several nodes are agents (remember that an agent is simply a graph that has access to tools and can decide which tools to use and when, thanks to smart prompt engineering. Since an agent is a graph, and graphs can be run as nodes, then agents can be run as nodes). They showed a vanilla use case here since the topic is already complex, and they recommend first doing a single agent architecture, and only when needed turn to multi agent ones.
+
+There are different architectures. We saw the Supervisor one, where an agent decides which agent shall run next.
+
+
+
+
 
 
 
