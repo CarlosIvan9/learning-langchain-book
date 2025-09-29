@@ -224,6 +224,27 @@ It would be super exciting to work on the example mentioned in the first page. M
 
 * We saw how adding different keys into the State dictionary can lead to more flexibility in your app. For example, adding a key for the RAG documents extracted to also output that info (or for monitoring performance), saving the user query in a different key to be used in different nodes, and auxiliar keys that help define the routing when using conditional edges.
 
+# Chapter 6
+High level stuff
+* This chapter is very very useful. Give it a read whenever you want to implement agents. 
+* A tool can be any function (python logic, api call...) that could be useful in providing a better answer to the user, than using the llm alone.
+* An agent is a langgraph graph that has the caoabilities to choose which tools to use and applies them.
+* The ability of an llm to use tools relies solely on prompt engineering. The first part of this chapter shows this with a very nice example.
+* The agent focuses only on one step at a time, and chooses the best tool to use as it goes.
+* Its not difficult to define an agent graph.
+* There is one node containing all tools in the graph, not one node per tool.
+* You can create custom tools using the @tool decorator.
+* An agent performs better, or hallucinates less, if the number of tools it has to decide on is not too long. For more than 10 tools, it is advised to first select a subset of tools based on vector similarity between the tools descriptions and the user query, and provide only these tools to the llm.
+
+Low level stuff:
+* In an agent, you dont have to define the stop node. That logic is also given as part of the function "bind_tools".
+* You dont have to create the prompt templates manually. That happens via the method "bind_tools". This method is supported by all commercial llms that langchain offers as chat models.
+* You can also call an tool manually. For this, you need to output a tool call message with the name of the tool. The name of the tool can be found in its ".name" attribute.
+* Under the hood, the llm is given the user query and a list of tools to use to solve it. The llm decides if it needs a tool or not. If it does not need a tool, it just outputs the answer to the query. If it decides it needs to call a tool, it will output a ToolCall message, with the name of the tool to call, and the body of the tool (All of this happens due to smart prompt engineering that gave specific instructions on tool usage to the llm. What is very very important too, is to have self-explanatory tool names and a very good description of the tool. This is because this is also included in the prompt engineering.)
+Thanks to the function "tools_condition" (that probably under the hood says, if the last message is a Tool call, then return the name of the node where your tools are), when the llm needs to run a tool, the next step in the graph is to run such tool and append its output in the messages history. After that, we go back to the model (we add an edge between tools and model), and the model again can decide if it contains all info needed to provide an answer, or if it needs to call another tool. Again, the magic lies in good prompt engineering.
+* The node for the tools needs to be the list of tools objects wrapped in the ToolNode() function.
+
+
 
 
 # Chapter 7
