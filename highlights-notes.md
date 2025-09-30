@@ -246,7 +246,6 @@ Thanks to the function "tools_condition" (that probably under the hood says, if 
 
 
 
-
 # Chapter 7
 
 In this chapter, called **Agents 2**, we saw more complex additions to the agents we saw in the previous chapter.
@@ -285,6 +284,62 @@ Multi agent architectures are graphs where several nodes are agents (remember th
 There are different architectures. We saw the Supervisor one, where an agent decides which agent shall run next.
 
 
+# Chapter 8
+
+This covers some good practices to make the most of the llms in an app.
+
+### Structured output -under the hood-
+Different llms use different strategies to force the llm to give the output in a specific format. Instead of learning the different ways each model does that, you can use structured_output, a langchain common interface for that.
+
+It is very, very important to add a good description to each of the fields you want to retrieve. This will be the information that the llm will use to decide what to output where.
+
+This approach is not bulletproof, and the llm can still return a format that did not adhere to the expected one. If that happens, there will occur an error since we used pydantic to make the schema. This means you have to make the app robust against these scenarios.
+
+A way to minimize the chances of getting schema errors is to set the temperature low.
+
+
+### Streaming outputs
+Good practices: streaming outputs. Otherwise users get desperate.
+
+There are 2 ways you can do this. The first one streams stuff after each node is run. This is called here as "Intermediate Output". The second one streams stuff inside nodes, token by token. This is called here as "Streaming token by token". The first one might be useful for the developer for debugging, and the second one for production settings.
+
+**Note:**  for doing this you need to use async programming:
+
+In LangGraph, using async is necessary for streaming outputs because streaming inherently relies on asynchronous operations. Here's a breakdown of why this is the case:
+
+🔄 Streaming = Non-blocking Communication
+
+When you stream outputs, you're:
+
+Sending partial results (e.g. tokens, messages) incrementally as they are generated.
+
+Not waiting for the entire response to be ready before sending it.
+
+To do this efficiently, you need non-blocking I/O, which means the program can continue running other tasks while waiting for the next chunk of data
+
+### Humans intervention during a graph run
+We saw how to let the user humans take some decisions on the graph. This is done again with functions from the async package. You also need to provide your graph with memory.
+
+The scripts shown in this part are just a fragment of the code needed to apply this. To see all the script, go to the repository.
+
+For this section, you need a decent knowledge of async package. I wrote some info on the notes and that should be enough for this part, but feel free to check the youtube tutorial on async functions.
+
+##### Modes for humans to intervene in the graph
+For the end user:
+* You can let the end user stop the outputs generated 
+* You can let the user decide if the tool suggested by the llm shall be used or not
+
+For the developer:
+* You can authorize a graph to access a specific tool or not
+
+You can determine the behaviour of the graph in case the user decides to write a new query before the output of the previous query is done. Some of these behaviours are:
+ * Dont let the user do that (not great)
+ * Let the user do it, but continue to stream the output of the previous query. Stream the output of the new query after the previous one is finished (not great)
+ * Interrupt the streaming of the previous. Start right away with the streaming of the new query. (preferred)
+
+Other cool stuff we saw:
+* You can edit the current state
+* You can even access the history of the state!!! kind of like github commits! That is because under the hood, when you provide the graph with memory, the graph stores the status of the state after each node is run. So you have complete lineage of the transformation of the state.
 
 
 
