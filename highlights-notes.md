@@ -341,6 +341,37 @@ Other cool stuff we saw:
 * You can edit the current state
 * You can even access the history of the state!!! kind of like github commits! That is because under the hood, when you provide the graph with memory, the graph stores the status of the state after each node is run. So you have complete lineage of the transformation of the state.
 
+# Chapter 9
+
+At the beginning I wonder how will this chapter is different from a traditional deployment like the one I did in the boardgames assistant. I realize the difference was they are using a serverless hosting that is paid (LangGraph Platform). Still a couple of sections of this chapter are useful. 
+
+### About "Prerequisites" section:
+
+We saw how to set a vector store in the cloud and access it via a url and a key. Even though the example used Supabase, you can do exactly the same in Qdrant.
+
+At work, you can also always use qdrant inside aws or azure, and the approach is very similar to what we learned in the ml engineering book. That is, deploy qdrant as a container via any of the possible alternatives (AWS EC2 (vm), ECS (containers), EKS (k8))
+
+
+
+### About "Understanding the LangGraph Platform API" section:
+
+Good if you want to use LangGraph Platform, but since it is serverless and you have to pay, its not great for my learning objectives.
+
+### About "Deploying Your AI App on LangGraph Platform" section:
+
+This chapter was supposed to show you how to deploy your graph, but they only did it via LangGraph Platform, a serverless host embedded in LangSmith but that comes with a price... The deployment is super easy, like in Render. You need to setup a langgraph config file (which includes a pointer to the graph you want to deploy) and run the langgraph dev command in the same location as your project. 
+
+Good news is, LangSmith, the software used to track and monitor threads, is free, and you can use it for everything, not just LangGraph graphs. Even by a non-LLM machine learning model! This chapter also shows you how to create a langsmith account and use it. This is also done in the **Prerequisites** section, and a tiny bit in this section, in the LangSmith subsection.
+
+### About "Security" section:
+
+The section about security is a useful one. It gives some tips on how to improve it. The most important ones that I remember were:
+* In the matter of possible give only **read-only** privileges to the agents
+* Set guardrails in case people want to change the purpose of the system (by making the agent think the instructions of the system changed)
+* Restric the databases to be reach to the agent to only  the ones you want and nothing more
+* Make sure each thread is identified with a real person, preferrably via a login
+* Dont let a single user send too many queries in a very short time (increases cost)
+
 
 
 
