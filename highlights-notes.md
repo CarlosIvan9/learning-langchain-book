@@ -374,5 +374,57 @@ The section about security is a useful one. It gives some tips on how to improve
 
 
 
+# Chapter 10
+
+This chapter is very very useful. It marks the difference between very professional, and just professional ML engineers.  It is about how to test the LLM system performance, and how to add robustness to guarantee a good performance.
+
+There are 3 stages throughout the LLM system lifecycle:
+* 
+* 
+* 
+In each of them, different strategies can be used to improve the system robustness and test its performance.
+
+### Stage 1:asdlfksdf
+
+In this stage, we can add robustness to our system by using a design robust against hallucinations. This is done by incorporating in the LangGraph graph, nodes that try to detect if the output of previous nodes makes sense or not. In case it does not make sense, it does not provide the output to the user, but instead it tries to generate a reasonable answer using alternative nodes.
+
+The example provided in the book is about a rag system. After calculating vector similarity between the user query and the vector store, a first robustness node evaluates if the answer to the user query can be found in the documents or not. Assuming it does, the rag system generates an answer to the user. But before giving it to the user, another robustness node evaluates if the answer is correct (checks for hallucination). Only after that, is the output provided to the user.
+
+Sample code of this is given in the script ____
 
 
+### Stage 2: asdfsdfdf
+
+This stage focuses on measuring performance of the system. By this, we mean to generate a numerical metric that can say how good the system is. It is mainly to benchmark the model, and this will also be useful for comparing different systems. The difference between benchmarking a traditional ML system and a LLM system is that not only the final output is measured in the LLM system, but also intermediate steps. 
+
+So we measure performance by assessing accuracy of:
+* The system final output
+* The output of specific nodes
+* The trajectory of the system (specially useful for Agents)
+You can consider the metrics of all these approaches to benchmark system against each other and decide which one is better, just like in traditional ML.
+
+We do all of this in a benchmarking dataset we create. This dataset must contain ground truths of the different types we want to assess performance. The dataset does not have to be too big. Even 30 user queries is fine, and later we could make a better version of it by adding edge cases we see after deployment.
+
+Langchain provides very nice functionality to try to make this as automated as possible.
+
+##### Assessing accuracy of final output
+This is literally just comparing the final output of the system against the final ground truth. We use an LLM as an evaluator to say if the generated output answers the question as good as the ground truth or not.
+
+An idea I came up with is to generate different levels of ground truth, one that would be a great answer, but also a good answer, an okay-ish answer and a bad answer. I can then ask the LLM to rank these 4 ground truths + the generated output in terms of how well they answer the question. Depending the position of the generated output, is the score it will receive (0, 0.25, 0.5, 0.75, 1). I think this approach is brilliant, but it takes more time to prepare the benchmarking dataset.
+
+##### Assessing accuracy of outputs of specific nodes
+Similar approach as with the final output, with the difference that the output is from a node. We have to have ground truths of nodes outputs, and the input we feed is not the user query but the input the node receives.
+
+##### Assessing accuracy of the system's trajectory
+This is useful for example if we want to assess if the system is using the tools correctly or not. You need trajectory ground truths. You can assess trajectory accuracy in different ways. 
+* Wheter the trajectory was exactly like the ground truth or not
+* Wheter the trajectory included some of the trajectory of the ground truth
+* Wheter the trajectory included all of the trajectory of the ground truth, even though extra steps were added
+Trajectory is an ordered sequence of steps.
+
+### Stage 3: asdfsdfdf
+In this stage we try to monitor and measure performance of the system with served data. 
+
+Before deployment, first deploy the solution but only make it accessible to a few users, which will provide you with feedback. You can also ask the users to write what they would like to receive as an answer, and in this way you can add their queries into the benchmark dataset. Also if some edge cases where found that the model does not behave well, add those to the dataset.
+
+After that, deploy the system, and if possible ask to give feedback of the answers with a thumbs up or down (like in chatgpt). Using LangSmith, monitor the user queries and these feedbacks.
