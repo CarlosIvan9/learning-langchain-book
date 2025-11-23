@@ -150,7 +150,7 @@ I think approach 1 is better than 2. Approach 2 is an overkill unless the origin
 ### Query routing
 This one is very nice too. It aims to solve the issues when the document chunks are stored in multiple vector stores. 
 
-* Local Routing: Using a LangChain wrapper of pydantic, you can add an extra step that detects, based on the user prompt, the best vector store for retrieving info. Thanks to pydantic you force the llm output to have the exact name of the vector store.  Nevertheless, this tool can be useful in way more cases: it can also be used to filter to specific chunks in the same vector store, for example.
+* Logical Routing: Using a LangChain wrapper of pydantic, you can add an extra step that detects, based on the user prompt, the best vector store for retrieving info. Thanks to pydantic you force the llm output to have the exact name of the vector store.  Nevertheless, this tool can be useful in way more cases: it can also be used to filter to specific chunks in the same vector store, for example.
 
 In this section, we are also introduced briefly to how to add functions into a chain by wrapping them as a RunnableLambda (remember that all members of a chain need to have the methods .invoke, .batch, .stream)
 
