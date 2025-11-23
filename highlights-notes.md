@@ -107,6 +107,7 @@ All this chapter is about the first part of RAG systems: indexing documents.
 
 ### About text splitters
 * RecursiveCharacterTextSplitter splits first by paragraph, then by line, then by words. They do this on a hierarchichal way to guarantee all chunks are as big as possible, but semantically coherent.
+* They also have the option to split semantically correctly python code or more importantle markdown (for documentation).
 * Splitters can be activated with these methods
   * split_documents : when inputs are documents objects
   * create_documents: when inputs are strings. This also allows passing data that you want to keep as metadata for each chunk.
