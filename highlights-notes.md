@@ -154,9 +154,9 @@ This one is very nice too. It aims to solve the issues when the document chunks 
 
 In this section, we are also introduced briefly to how to add functions into a chain by wrapping them as a RunnableLambda (remember that all members of a chain need to have the methods .invoke, .batch, .stream)
 
-* Semantic Routing: you create a description of each of the options for the routing, and you embed them. Then, to decide which routing to use for a given user prompt, you embed the user prompt and calculate its similarity with the options descriptions, and choose the route with the highest similarity. If you see it this way, in local routing you are letting a decoder decide which option to take, while in semantic routing you are letting the encoder do it.
+* Semantic Routing: you create a description of each of the options for the routing, and you embed them. Then, to decide which routing to use for a given user prompt, you embed the user prompt and calculate its similarity with the options descriptions, and choose the route with the highest similarity. If you see it this way, in logical routing you are letting a decoder decide which option to take, while in semantic routing you are letting the encoder do it.
 
-I think semantic routing might yield better accuracy, but nowadays decoders are so strong that I will choose first local routing because it is easier to implement.
+I think semantic routing might yield better accuracy, but nowadays decoders are so strong that I will choose first logical routing because it is easier to implement.
 
 
 ### Smart filtering
