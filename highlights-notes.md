@@ -135,7 +135,7 @@ This is done with the RecordManager class. Basically it registers all chunks wit
 # Chapter 3
 This chapter covers tools to make the retrieval of documents more accurate, consistent and robust. This is done with strategies like query transformation, query routing, smart filtering and query construction.
 
-We also are shown that we can wrap the vector store as a retriever using ".as_retriever()" and then performing "invoke" or ".get_relevant_documents()", as a better alternative to ".similarity_search()" for production ready RAGs. This is because every time we want to do a vector similarity with a query, we just have to run ".invoke('this is the query')", instead of first embedding the query and then doing vector similarity. More importantly, filters are easier to define there too. However, I still think that langgraph could a better approach sometimes?, cleaner and with more visibility?
+We also are shown that we can wrap the vector store as a retriever using ".as_retriever()" and then performing "invoke" or ".get_relevant_documents()", as a better alternative to ".similarity_search()" for production ready RAGs. This is because every time we want to do a vector similarity with a query, we just have to run ".invoke('this is the query')", instead of first embedding the query and then doing vector similarity. Filters can also be applied there, although in Qdrant also with similarity_searh. I still think that langgraph could a better approach sometimes?, cleaner and with more visibility?
 
 Fun fact: retrieving more documents (higher k) makes the RAG slower.
 
