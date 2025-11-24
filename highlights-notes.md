@@ -125,6 +125,7 @@ All this chapter is about the first part of RAG systems: indexing documents.
   * Create summaries of each chunk. Embed those summaries and add them to the vector store
   * Cluster summary embeddings. For each cluster, create a summary of the summaries. Embed that summary, and add it to the vector store
   * Generate a summary of all the cluster summaries. Embed that summary, and add it to the vector store.
+  * I think that depending of the data, it might sometimes be better to cluster wrt the closest chunks instead of wrt embeddings similarity (e.g. boardgame rules?)
 
 
 ### Tracking document changes
