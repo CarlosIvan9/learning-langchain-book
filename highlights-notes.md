@@ -237,6 +237,7 @@ High level stuff
 * There is one node containing all tools in the graph, not one node per tool.
 * You can create custom tools using the @tool decorator.
 * An agent performs better, or hallucinates less, if the number of tools it has to decide on is not too long. For more than 10 tools, it is advised to first select a subset of tools based on vector similarity between the tools descriptions and the user query, and provide only these tools to the llm.
+* You can create tools with structured output (like pedantic classes). This seems to be very useful. This is not here, but in the documentation of LangChain. (add link here).
 
 Low level stuff:
 * In an agent, you dont have to define the stop node. That logic is also given as part of the function "bind_tools".
