@@ -180,6 +180,8 @@ The boardgames assistant is a good application of these concepts.
 ### Introducing LangGraph
 It first covers the intuition of langgraph and shows that all nodes of a graph should input and output a state, which is a dictionary. Each node can modify the state by adding new keys or updating values of existing ones.
 
+Nodes don't have to be tools or llm calls. they can also be just functions with input output the state
+
 ### Creating a StateGraph
 
 Here we saw how to create a simple graph using a custom state. We also see the commands to make the graph always append new messages into their history.
